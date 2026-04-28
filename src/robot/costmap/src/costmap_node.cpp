@@ -5,7 +5,7 @@
  
 #include "costmap_node.hpp"
  
-CostmapNode::CostmapNode() : Node("costmap") {
+CostmapNode::CostmapNode() : Node("costmap"), costmap_(robot::CostmapCore(this->get_logger())) {
   width = 100;
   height = 100;
   resolution = 0.1;
