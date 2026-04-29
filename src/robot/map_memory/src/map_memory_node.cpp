@@ -102,6 +102,16 @@ void MapMemoryNode::integrateCostmap() {
     
     if (latest_costmap_.data[local_index] != -1) {
       global_map_.data[global_index] = latest_costmap_.data[local_index];
+
+      if (new_i + 1 < global_map_height) {
+          global_map_.data[global_index + global_map_width] = latest_costmap_.data[local_index];
+      }
+      if (new_j + 1 < global_map_width) {
+          global_map_.data[global_index + 1] = latest_costmap_.data[local_index];
+      }
+      if (new_i + 1 < global_map_height && new_j + 1 < global_map_width) {
+          global_map_.data[global_index + global_map_width + 1] = latest_costmap_.data[local_index];
+      }
     }
 
     j++;
