@@ -9,7 +9,7 @@ CostmapNode::CostmapNode() : Node("costmap"), costmap_(robot::CostmapCore(this->
   width = 100;
   height = 100;
   resolution = 0.1;
-  inflation_rad = 1;
+  inflation_rad = 1.3;
   max_cost = 100;
 
   OccupancyGrid.resize(100, std::vector<int>(100, 0));

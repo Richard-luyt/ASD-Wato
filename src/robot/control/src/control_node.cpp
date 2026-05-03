@@ -101,9 +101,9 @@ void ControlNode::controlLoop() {
 
 ControlNode::ControlNode(): Node("control"), control_(robot::ControlCore(this->get_logger())) {
   // Initialize parameters
-  lookahead_distance_ = 1.0;  // Lookahead distance
-  goal_tolerance_ = 0.1;     // Distance to consider the goal reached
-  linear_speed_ = 0.5;       // Constant forward speed
+  lookahead_distance_ = 0.8;  // Lookahead distance
+  goal_tolerance_ = 0.5;     // Distance to consider the goal reached
+  linear_speed_ = 0.4;       // Constant forward speed
  
   // Subscribers and Publishers
   path_sub_ = this->create_subscription<nav_msgs::msg::Path>(

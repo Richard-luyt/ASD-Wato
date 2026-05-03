@@ -3,7 +3,7 @@
 MapMemoryNode::MapMemoryNode() : Node("map_memory"), map_memory_(robot::MapMemoryCore(this->get_logger())) {
   last_x = 0;
   last_y = 0;
-  distance_threshold = 1.5;
+  distance_threshold = 0.2;
   costmap_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
     "/costmap", 10, std::bind(&MapMemoryNode::costmapCallback, this, std::placeholders::_1));
   odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
@@ -99,19 +99,47 @@ void MapMemoryNode::integrateCostmap() {
     }
 
     int global_index = new_i * global_map_width + new_j;
-    
-    if (latest_costmap_.data[local_index] != -1) {
-      global_map_.data[global_index] = latest_costmap_.data[local_index];
 
-      if (new_i + 1 < global_map_height) {
-          global_map_.data[global_index + global_map_width] = latest_costmap_.data[local_index];
-      }
-      if (new_j + 1 < global_map_width) {
-          global_map_.data[global_index + 1] = latest_costmap_.data[local_index];
-      }
-      if (new_i + 1 < global_map_height && new_j + 1 < global_map_width) {
-          global_map_.data[global_index + global_map_width + 1] = latest_costmap_.data[local_index];
-      }
+    int local_val = latest_costmap_.data[local_index];
+    int global_val = global_map_.data[global_index];
+    
+    // if (latest_costmap_.data[local_index] != -1) {
+    //   //if (latest_costmap_.data[local_index] > global_map_.data[global_index]) {
+    //       //global_map_.data[global_index] = latest_costmap_.data[local_index];
+    //   //}
+
+    //   if (local_val > global_val || global_val == -1 || local_val == 0) {
+    //       global_map_.data[global_index] = local_val;
+
+    //       if (new_i + 1 < global_map_height) {
+    //           global_map_.data[global_index + global_map_width] = latest_costmap_.data[local_index];
+    //       }
+    //       if (new_j + 1 < global_map_width) {
+    //           global_map_.data[global_index + 1] = latest_costmap_.data[local_index];
+    //       }
+    //       if (new_i + 1 < global_map_height && new_j + 1 < global_map_width) {
+    //           global_map_.data[global_index + global_map_width + 1] = latest_costmap_.data[local_index];
+    //       }
+
+    //   }
+      
+    // }
+
+    if (local_val != -1) {
+        for (int di = 0; di <= 1; ++di) {
+            for (int dj = 0; dj <= 1; ++dj) {
+                int fill_i = new_i + di;
+                int fill_j = new_j + dj;
+
+                if (fill_i >= 0 && fill_i < global_map_height && fill_j >= 0 && fill_j < global_map_width) {
+                    int global_index = fill_i * global_map_width + fill_j;
+                    int global_val = global_map_.data[global_index];
+                    if (local_val > global_val || global_val == -1) {
+                        global_map_.data[global_index] = local_val;
+                    }
+                }
+            }
+        }
     }
 
     j++;

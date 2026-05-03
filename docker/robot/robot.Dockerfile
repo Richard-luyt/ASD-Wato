@@ -13,6 +13,13 @@ COPY src/robot/planner planner
 COPY src/robot/control control
 COPY src/robot/bringup_robot bringup_robot
 
+# RUN sed -i 's/ppa.launchpad.net/launchpad.proxy.ustclug.org/g' /etc/apt/sources.list.d/*.list
+
+# RUN rm /etc/apt/sources.list.d/apt-fast-stable-focal.list || true
+
+RUN find /etc/apt -name "*.list" -exec sed -i '/apt-fast/d' {} + && \
+    rm -f /etc/apt/sources.list.d/*apt-fast* || true
+    
 # Scan for rosdeps
 RUN apt-get -qq update && rosdep update && \
     rosdep install --from-paths . --ignore-src -r -s \
@@ -27,6 +34,9 @@ FROM ${BASE_IMAGE} AS dependencies
 
 # Install Rosdep requirements
 COPY --from=source /tmp/colcon_install_list /tmp/colcon_install_list
+
+
+
 RUN apt-fast install -qq -y --no-install-recommends $(cat /tmp/colcon_install_list)
 
 # Copy in source code from source stage

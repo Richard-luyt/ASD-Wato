@@ -136,15 +136,18 @@ void PlannerNode::planPath() {
       if(x < 0 || y < 0 || x >= current_map_.info.width || y >= current_map_.info.height) {
         continue;
       }
-      if(current_map_.data[y * current_map_.info.width + x] > 10 ) {
+      if(current_map_.data[y * current_map_.info.width + x] > 30 ) {
         continue;
       }
       if(closedList.count(nxt)) {
         continue;
       }
 
-      if(mapping.find(nxt) == mapping.end() || cur.g_score + costs[i] < mapping[nxt].g_score) {
-        AStarNode nxtA(nxt, cur.g_score + costs[i], calculate_H(nxt, goal_idx));
+      double map_cost_penalty = current_map_.data[y * current_map_.info.width + x] / 100.0;
+      double step_cost = costs[i] + (map_cost_penalty * 3.0);
+
+      if(mapping.find(nxt) == mapping.end() || cur.g_score + step_cost < mapping[nxt].g_score) {
+        AStarNode nxtA(nxt, cur.g_score + step_cost, calculate_H(nxt, goal_idx));
         nxtA.from = cur.index;
         mapping[nxt] = nxtA;
         openList.push(nxtA);

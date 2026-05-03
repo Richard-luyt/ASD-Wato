@@ -26,7 +26,7 @@ class MapMemoryNode : public rclcpp::Node {
 
     nav_msgs::msg::OccupancyGrid global_map_;
     double last_x, last_y;
-    double distance_threshold = 1.5;
+    double distance_threshold = 0.2;
     bool costmap_updated_ = false;
 
     void costmapCallback(const nav_msgs::msg::OccupancyGrid::SharedPtr msg);
