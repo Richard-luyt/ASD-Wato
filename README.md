@@ -22,7 +22,7 @@ clone the workspace and run the following code:
 ```
 then enable foxglove app and select `wato_asd_training_foxglove_config ` config file
 
-To publish the transformation from `map` frame to `sim_world` frame, enter your docker environment and run the following code:
+**⚠️ To publish the transformation from `map` frame to `sim_world` frame, enter your docker environment and run the following code: (In case Foxglove can not find the transformation from map to sim_world)**
 
 ```bash
 ros2 run tf2_ros static_transform_publisher --x 0 --y 0 --z 0 --yaw 0 --pitch 0 --roll 0 --frame-id sim_world --child-frame-id map
